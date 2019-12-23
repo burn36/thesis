@@ -1,0 +1,76 @@
+ryu-manager ryu.app.simple_switch --verbose --log-dir .
+ryu-manager --verbose ryu.app.simple_switch_13.py
+
+sudo mn --topo tree,,3 --mac --controller remote --switch ovsk
+sudo mn --topo tree,1,3 --controller=remote,ip=192.168.0.100 --switch ovsk --link tc,bw=100,delay=1ms
+
+ovs-ofctl dump-flows s1
+ovs-vsctl list flow-table
+ovs-vsctl list bridge
+ovs-vsctl list controller
+ovs-vsctl list manager
+ovs-vsctl list interface
+
+sudo ovs-ofctl show s1
+
+ovs-vsctl -- --id=@ft create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge br0 flow_tables=0=@ft
+ovs-vsctl -- --id=@ft create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s1 flow_tables=0=@ft
+ovs-vsctl -- --id=@ft1 create Flow_Table flow_limit=1 overflow_policy=refuse -- set Bridge s1 flow_tables=1=@ft1
+ovs-vsctl -- set Bridge s1 flow_tables=1=@ft1
+ovs-vsctl -- set Bridge s1 flow_tables=1=@ft1
+ovs-vsctl -- --id=@ft create Flow_Table flow_limit=2 overflow_policy=evict groups='"NXM_OF_IN_PORT[]"' -- set Bridge s1 flow_tables:0=@ft
+
+
+ovs-ofctl add-flow s1 table=1 priority=65535,idle_timeout=30,dl_type=0x0800,nw_proto=17,in_port=1,actions=output:2
+ovs-ofctl add-flow s1 table=0 priority=65535,idle_timeout=30,dl_type=0x0800,nw_proto=17,in_port=1,actions=output:2
+ovs-ofctl add-flow s1 table=1,priority=65535,idle_timeout=30,dl_type=0x0800,nw_proto=17,in_port=1,actions=output:2
+ovs-ofctl add-flow s1 table=0,priority=65535,idle_timeout=30,dl_type=0x0800,nw_proto=17,in_port=1,actions=output:2
+
+ovs-ofctl dump-flows s1 -O OpenFlow13 table=0
+
+dpctl dump-flows -O OpenFlow13 table=0
+
+ovs-ofctl del-flow s1 -O OpenFlow13 table=0
+
+
+disable usb
+echo "auto" > "/sys/bus/usb/devices/2-1.7/power/control"
+echo "0" > "/sys/bus/usb/devices/2-1.7/power/autosuspend_delay_ms"
+echo -n "2-1.7" > /sys/bus/usb/drivers/usb/unbind
+
+enable usb
+echo "on" > "/sys/bus/usb/devices/2-1.7/power/control"
+echo "2000" > "/sys/bus/usb/devices/2-1.7/power/autosuspend_delay_ms"
+echo -n "2-1.7" > /sys/bus/usb/drivers/usb/bind
+
+2aa88f6b-5bc0-4f84-8146-3ebce5fedac3
+
+ovs-vsctl create Flow_Table flow_limit=1 overflow_policy=refuse 
+
+ovs-ofctl del-flows s1
+
+sudo ovs-vsctl add bridge s1 flow_tables 0=@nam1 -- --id=@nam1 create flow_table flow_limit=1
+
+sudo ifconfig eth0 hw ether 00:11:22:33:44:55
+sudo ifconfig eth0 hw ether $(ethtool -P eth0 | awk '{print $3}')
+
+brctl addbr br0
+brctl addif br0 eth0
+brctl addif br0 tap0
+ifconfig eth0 down
+ifconfig eth0 0.0.0.0 up
+ifconfig tap0 0.0.0.0 up
+ifconfig br0 <Lan ip address> up
+
+ip link add link h1-eth0 address 00:11:11:11:11:11 eth0.1 type macvlan  mode bridge
+ifconfig eth0.1 192.168.1.3 up
+ip link add link eth0 address 00:22:22:22:22:22 eth0.2 type macvlan
+
+ip link add macvlan1 link eth0 type macvlan mode bridge
+
+python -m SimpleHTTPServer 80 &
+
+sudo ip link delete eth0.1
+
+#filter wireshark
+not stp and not icmpv6 and not mdns
