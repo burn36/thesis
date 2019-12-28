@@ -28,7 +28,7 @@ class Abilene2(Topo):
 
         self.s1 = self.addSwitch('s1',dpid='0000000000000001', protocols='OpenFlow13')
         self.s2 = self.addSwitch('s2',dpid='0000000000000002', protocols='OpenFlow13')
-        self.s3 = self.addSwitch('s3',dpid='0000000000000003', protocols='OpenFlow13')      
+        self.s3 = self.addSwitch('s3',dpid='0000000000000003', protocols='OpenFlow13')
 
         # self.s4 = self.addSwitch('s4', protocols='OpenFlow13')
         # self.s5 = self.addSwitch('s5', protocols='OpenFlow13')
@@ -57,7 +57,7 @@ class Abilene2(Topo):
 def myNetwork(arg):
 
     net = Mininet(Abilene2(), switch=OVSKernelSwitch, controller=None, link=TCLink )
-    net.addController(RemoteController( name='c0', ip='192.168.0.100' ))
+    net.addController(RemoteController( name='c0', ip='192.168.0.101' ))
     
     net.start()
     net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s1 flow_tables=0=@ft');
@@ -65,7 +65,7 @@ def myNetwork(arg):
     net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft3 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s3 flow_tables=0=@ft3');
     h1=net.getNodeByName( 'h1' )
     # h1.popen("python -m SimpleHTTPServer 80",cwd='~')
-    h1.popen("python -m SimpleHTTPServer 80",cwd=os.path.expanduser('~/topo/server'))
+    h1.popen("python -m SimpleHTTPServer 80",cwd=os.path.expanduser('~/thesis/server'))
     CLI1(net)
     net.stop()
 

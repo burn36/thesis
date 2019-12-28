@@ -64,25 +64,23 @@ class CLI1( CLI ):
         "Lauch TCAM flood attack"
         args = _line.split()
         if len(args) != 1:
-            error( 'invalid number of args: simulasi name_file\n' )
+            error( 'invalid number of args: time\n' )
         else:
+            time=args[0]
             s1 = self.mn[ "s1" ]
             h2 = self.mn[ "h2" ]
             h3 = self.mn[ "h3" ]
-            h5 = self.mn[ "h5" ]
-            h2serv=TCAMAtack(h2)
-            h3serv=TCAMAtack(h3)
-            h5serv=TCAMAtack(h5)
+            h2serv=TCAMAtack(h2,1,time)
+            h3serv=TCAMAtack(h3,2,time)
             h2serv.start()
             h3serv.start()
-            h5serv.start()
 
             status=h2serv.is_alive() or h3serv.is_alive() or h5serv.is_alive()
             try:
                 output( '\nH2, H3, H5 does attack\n')
                 while status:
                     time.sleep(1)
-                    status=h2serv.is_alive() or h3serv.is_alive() or h5serv.is_alive()
+                    status=h2serv.is_alive() or h3serv.is_alive
 
             except KeyboardInterrupt:
                 # Output a message - unless it's also interrupted
@@ -91,7 +89,6 @@ class CLI1( CLI ):
                     output( '\nInterrupt\n' )
                     h2serv.stop()
                     h3serv.stop()
-                    h5serv.stop()
                 except Exception:
                     pass
 
@@ -194,14 +191,18 @@ class DOSSYN(threading.Thread):
             print sys.exc_info()
 
 class TCAMAtack(threading.Thread):
-    def __init__(self,node,time=10):
+    def __init__(self,node,seq=0,time=30):
         threading.Thread.__init__(self)
         self.node=node
         self.time=time
+        self.seq=seq
 
     def run(self):
         try:
-            self.popen=self.node.popen("python attacklaunch.py 10.0.0.1")
+            if(self.seq=0)
+                self.popen=self.node.popen("python attacklaunch.py 10.0.0.1")
+            else
+                self.popen=self.node.popen("python attacklaunch2.py 10.0.0.1")
             start = time.time()
             while time.time()-start<self.time:
                 time.sleep(0.1)
