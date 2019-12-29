@@ -1,7 +1,8 @@
-from subprocess import call
+from subprocess import call,Popen, PIPE, STDOUT
 from cmd import Cmd
 from os import isatty
 from select import poll, POLLIN
+import signal
 import sys
 import time
 import os
@@ -66,18 +67,18 @@ class CLI1( CLI ):
         if len(args) != 1:
             error( 'invalid number of args: time\n' )
         else:
-            time=args[0]
+            dur=args[0]
             s1 = self.mn[ "s1" ]
             h2 = self.mn[ "h2" ]
             h3 = self.mn[ "h3" ]
-            h2serv=TCAMAtack(h2,1,time)
-            h3serv=TCAMAtack(h3,2,time)
+            h2serv=TCAMAtack(h2,1,dur)
+            h3serv=TCAMAtack(h3,2,dur)
             h2serv.start()
             h3serv.start()
 
-            status=h2serv.is_alive() or h3serv.is_alive() or h5serv.is_alive()
+            status=h2serv.is_alive() or h3serv.is_alive()
             try:
-                output( '\nH2, H3, H5 does attack\n')
+                output( '\nH2 and H3 does attack\n')
                 while status:
                     time.sleep(1)
                     status=h2serv.is_alive() or h3serv.is_alive
@@ -123,15 +124,30 @@ class CLI1( CLI ):
         else:
             s1 = self.mn[ "s1" ]
             h2 = self.mn[ "h2" ]
-            # node4 = self.mn[ "h13" ]
-            # node5 = self.mn[ "h14" ]
-            delaySetup=args[0]+"delaySetup" 
-            totalPacket=args[0]+"totalPacket"
-            data=args[0]+"data"
-            video=args[0]+"video"
-            voip=args[0]+"voip"
+            h4 = self.mn[ "h4" ]
+
             h2serv=ServerAtack(h2)
-            h2serv.start()
+            try:
+
+                h2serv.start()
+                status=h2serv.is_alive()
+                h4.sendCmd("sudo -u pasca firefox --new-window 10.0.0.1:80 --devtools")
+                output( '\nH2 attack and open firefox in h4, try to access 10.0.0.1\n')
+                while status:
+                    status=h2serv.is_alive()
+                    output( '\nH2 status '+str(status)+' \n')
+                    time.sleep(1)
+                self.waitForNode(h4)
+                h2serv.stop()                
+            except KeyboardInterrupt:
+                # Output a message - unless it's also interrupted
+                # pylint: disable=broad-except
+                try:
+                    output( '\nInterrupt\n' )
+                    h2serv.stop()
+                    h4.sendInt()
+                except Exception:
+                    pass
 
             # popen=h2.popen("python -m SimpleHTTPServer 80",cwd=os.path.expanduser('~/topo/attacker'))
             # h2.cmdPrint('cd ~/topo/attacker')
@@ -199,9 +215,9 @@ class TCAMAtack(threading.Thread):
 
     def run(self):
         try:
-            if(self.seq=0)
+            if(self.seq==0):
                 self.popen=self.node.popen("python attacklaunch.py 10.0.0.1")
-            else
+            else:
                 self.popen=self.node.popen("python attacklaunch2.py 10.0.0.1")
             start = time.time()
             while time.time()-start<self.time:
@@ -238,14 +254,17 @@ class ServerAtack(threading.Thread):
 
     def run(self):
         try:
-            self.popen=self.node.popen("python -m SimpleHTTPServer 80",cwd=os.path.expanduser('~/topo/attacker'))
+            
+            self.popen=self.node.popen("python -m SimpleHTTPServer 80",cwd=os.path.expanduser('~/thesis/attacker'))
+            self.popen2=self.node.popen("python hijack.py")
         except Exception as e:
             print sys.exc_info()
     def stop(self):
         try:
             self.popen.terminate()
+            self.popen2.send_signal(signal.SIGINT)
         except Exception as e:
-            pass
+            output(e+'\n')
 
 class GeneratorPacket(threading.Thread):
 
