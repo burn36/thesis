@@ -1,0 +1,353 @@
+    1  ifconfig 
+    2  sudo apt install tasksel
+    3  sudo tasksel
+    4  sudo reboot 
+    5  sudo nano /etc/X11/xorg.conf
+    6  sudo Xorg -configure
+    7  man xorg.conf
+    8  cat /etc/X11/Xwrapper.config 
+    9  find xorg.conf
+   10  cat /usr/share/X11/xorg.conf.d/10-radeon.conf 
+   11  cat /usr/share/X11/xorg.conf.d/10-amdgpu.conf 
+   12  sudo reboot 
+   13  sudo apt update
+   14  sudo nano /etc/default/grub
+   15  sudo grub-mkconfig -o /boot/grub/grub.cfg 
+   16  sudo apt-get install gnome-system-monitor
+   17  lspci | grep VGA
+   18  sudo lshw -c video | grep 'configuration'
+   19  sudo add-apt-repository ppa:oibaf/graphics-drivers
+   20  sudo apt-get install ppa-purge
+   21  sudo apt update && sudo apt -y upgrade
+   22  ip link set eth0 up
+   23  sudo ip link set eth0 up
+   24  sudo dhclient eth0
+   25  lspci | grep VGA
+   26  ifc
+   27  ip -a
+   28  ip -all
+   29  ip -4 
+   30  ip sh -4 
+   31  ip show -4 
+   32  ip addr -4 sh
+   33  ip addr -4 
+   34  ip addr
+   35  dhclient eth1
+   36  sudo dhclient eth1
+   37  ip addr
+   38  ip 
+   39  ip addr eth1
+   40  ip link set eth1 up
+   41  sudo ip link set eth1 up
+   42  ip a
+   43  sudo dhclient eth1
+   44  ip addr
+   45  sudo ip link set eth1 down
+   46  sudo apt update 
+   47  sudo apt remove firefox 
+   48  sudo apt autoremove 
+   49  sudo apt install firefox
+   50  sudo ln -s /usr/share/X11/xorg.conf.d/10-evdev.conf /etc/X11/xorg.conf.d/10-evdev.conf
+   51  sudo apt install --reinstall xserver-xorg-video-amdgpu
+   52  sudo dpkg --configure -a
+   53  sudo dpkg-reconfigure gdm3 ubuntu-session xserver-xorg-video-amdgpu
+   54  sudo apt-get install mesa-vdpau-drivers 
+   55  lspci -nn | grep -E 'VGA|Display'
+   56  lshw -c video
+   57  sudo lshw -c video
+   58  glxinfo | less
+   59  sudo apt install mesa-utils
+   60  glxinfo | less
+   61  /usr/lib/nux/unity_support_test -p
+   62  glxinfo | grep "direct rendering"
+   63  sudo apt purge linux*
+   64  sudo apt install linux-headers-generic linux-image-generic linux-tools-generic
+   65  sudo apt --fix-broken install
+   66  sudo apt install linux-headers-generic linux-image-generic linux-tools-generic
+   67  sudo reboot 
+   68  ip a
+   69  ip link set eth0 up
+   70  sudo ip link set eth0 up
+   71  ip
+   72  ifconfig
+   73  sudo apt install net-tools
+   74  ip a
+   75  sudo dhclient eth0
+   76  sudo apt install net-tools
+   77  ifconfig 
+   78  sudo nano /etc/apt/sources.list.d/google-chrome.list
+   79  wget https://dl.google.com/linux/linux_signing_key.pub
+   80  sudo apt-key add linux_signing_key.pub 
+   81  sudo apt update 
+   82  sudo apt install google-chrome-stable 
+   83  sudo apt install git
+   84  git clone https://github.com/mininet/mininet
+   85  mininet/util/install.sh -a
+   86  sudo mn
+   87  git clone https://github.com/smythtech/sdnpwn
+   88  cd 
+   89  cd sdnpwn/
+   90  sudo chmod +x sdnpwn.py 
+   91  sudo chmod +x setup.sh 
+   92  sudo ./setup.sh 
+   93  cd ~/Downloads/
+   94  sudo apt install ./teamviewer_15.1.3937_amd64.deb 
+   95  git clone https://github.com/burn36/thesis
+   96  git config --global credential.helper store
+   97  git clone https://github.com/burn36/thesis
+   98  wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+   99  sudo apt-get install apt-transport-https
+  100  echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+  101  sudo apt update 
+  102  sudo apt-get install sublime-text
+  103  cd ..
+  104  ls
+  105  cd Downloads/
+  106  ls
+  107  cd thesis/
+  108  ls
+  109  subl catatan 
+  110  ifconfig 
+  111  sudo reboot 
+  112  sudo apt update
+  113  sudo nano /etc/network/interfaces
+  114  sudo nano /etc/netplan/50-cloud-init.yaml 
+  115  netplan 
+  116  netplan apply 
+  117  sudo netplan apply 
+  118  ifconfig 
+  119  sudo apt update 
+  120  sudo nano /etc/apt/sources.list
+  121  sudo apt update
+  122  sudo gedit /etc/gdm3/custom.conf
+  123  ls -l /var/crash/
+  124  sudo rm /var/crash/*
+  125  sudo dpkg-reconfigure wireshark-common
+  126  whoami 
+  127  getent group groupname
+  128  groups pasca 
+  129  ls -l /var/crash/
+  130  ls
+  131  cd Dow
+  132  cd Downloads/
+  133  ls
+  134  mv thesis/ ~
+  135  ls
+  136  cd 
+  137  ls
+  138  cd thesi
+  139  subl tree.py 
+  140  subl catatan 
+  141  sudo python tree.py 
+  142  sudo mn
+  143  sudo python tree.py 
+  144  cd ..
+  145  ls
+  146  sudo python3 tree.py 
+  147  cd mininet/
+  148  ls
+  149  cd custom/
+  150  ls
+  151  sudo python topo-2sw-2host.py 
+  152  cd ..
+  153  ls
+  154  cd util/
+  155  ls
+  156  ./install.sh -a
+  157  sudo apt autoremove 
+  158  sudo rm -rf /usr/local/bin/mn /usr/local/bin/mnexec     /usr/local/lib/python*/*/*mininet*     /usr/local/bin/ovs-* /usr/local/sbin/ovs-*
+  159  sudo mn
+  160  cd..
+  161  cd ..
+  162  sudo make install
+  163  sudo mn
+  164  sudo mn --version
+  165  cd examples/
+  166  ls
+  167  sudo ./cpu.py 
+  168  wireshark 
+  169  ifconfig 
+  170  ./sdnpwn.py sdn-detect
+  171  ./sdnpwn.py info sdn-detect
+  172  ./sdnpwn.py sdn-detect -t 10.0.0.2
+  173  ./sdnpwn.py sdn-detect -t 10.0.0.2 -v
+  174  ./sdnpwn.py sdn-detect -t 10.0.0.5 -v
+  175  ping 10.0.0.1
+  176  ping 10.0.0.1
+  177  ping 10.0.0.3
+  178  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay bridge 
+  179  dhclient h3-eth0
+  180  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay bridge 
+  181  wireshark &
+  182  ./sdnpwn.py 
+  183  ./sdnpwn.py info lfa-relay
+  184  ./sdnpwn.py lfa-relay –iface1 h2-eth0 –iface2 h2-eth1 –relay bridge 
+  185  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  186  ifconfig 
+  187  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  188  ifconfig 
+  189  ip a
+  190  brctl 
+  191  brctl show
+  192  ifconfig h2-eth0 up
+  193  ifconfig 
+  194  wireshark &
+  195  brctl show
+  196  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  197  ./sdnpwn.py info lfa-relay
+  198  ifconfig 
+  199  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  200  echo 16384 /sys/class/net/br0/bridge/group_fwd_mask 
+  201  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  202  echo 16384 > /sys/class/net/br0/bridge/group_fwd_mask 
+  203  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  204  brctl delbr br0 
+  205  ifconfig br0 down
+  206  brctl delbr br0 
+  207  ifconfig 
+  208  brctl show
+  209  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  210  brctl delbr br0 
+  211  ifconfig br0 down
+  212  brctl delbr br0 
+  213  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  214  ifconfig br0 down
+  215  brctl delbr br0 
+  216  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  217  ifconfig 
+  218  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  219  ifconfig br0 down
+  220  brctl delbr br0 
+  221  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  222  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  223  16384 > /sys/class/net/br0/bridge/group_fwd_mask
+  224  echo 16384 > /sys/class/net/br0/bridge/group_fwd_mask
+  225  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  226  echo 0 > /sys/class/net/br0/bridge/group_fwd_mask
+  227  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  228  ifconfig br0 down
+  229  brctl delbr br0 
+  230  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  231  ifconfig 
+  232  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  233  ifconfig br0 down
+  234  brctl delbr br0 
+  235  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  236  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  237  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  238  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  239  ifconfig 
+  240  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  241  ifconfig 
+  242  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  243  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  244  cd ~/
+  245  ls
+  246  cd sdnpwn/
+  247  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  248  ifconfig 
+  249  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  250  ifconfig 
+  251  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  252  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge --stp off
+  253  cd ~/sdnpwn/
+  254  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay bridge
+  255  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay bridge --stp off
+  256  brctl show
+  257  sudo teamviewer --daemon enable
+  258  sudo service teamviewerd restart
+  259  sudo teamviewer --daemon restart
+  260  sudo crontab -e
+  261  cd thesis/
+  262  wireshark 
+  263  sudo python tree.py 
+  264  subl 
+  265  sudo mn -c
+  266  sudo python tree.py 
+  267  ls
+  268  cd 
+  269  ls
+  270  cd sdnpwn/
+  271  ls
+  272  ./sdnpwn.py 
+  273  ./setup.sh 
+  274  sudo ./setup.sh 
+  275  ./sdnpwn.py 
+  276  pip3 freeze
+  277  subl sdnpwn.py 
+  278  python3 --version
+  279  sudo apt install python3-scapy 
+  280  subl sdnpwn.py 
+  281  ./sdnpwn.py 
+  282  ./sdnpwn.py info mods
+  283  ./sdnpwn.py -l
+  284  ./sdnpwn.py -s
+  285  ./sdnpwn.py mods
+  286  ls
+  287  cd apps/
+  288  ls
+  289  cd ..
+  290  cd modules/
+  291  ls
+  292  subl lfa_relay.py 
+  293  subl lfa_scapy.py 
+  294  cd ..
+  295  ls
+  296  ./sdnpwn.py -l
+  297  ./sdnpwn.py moduls
+  298  ./sdnpwn.py modules/
+  299  ./sdnpwn.py modules
+  300  sudo ./sdnpwn.py modules
+  301  sudo ./sdnpwn.py mods
+  302  sudo ./sdnpwn.py info mods
+  303  sudo ./sdnpwn.py info lfa-scapy
+  304  sudo ./sdnpwn.py info lfa_scapy
+  305  cd
+  306  cd thesis/
+  307  cp tree.py tree2.py 
+  308  python tree2.py 
+  309  sudo python tree2.py 
+  310  xterm h2 h3
+  311  sudo wireshark 
+  312  sudo python tree2.py 
+  313  ifconfig 
+  314  wireshark 
+  315  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  316  ifconfig 
+  317  wireshark &
+  318  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  319  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay bridge 
+  320  ifconfig 
+  321  wireshark &
+  322  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay bridge 
+  323  ifc
+  324  ifconfig 
+  325  ifconfig h2-eth1 192.168.1.2/24
+  326  ifconfig 
+  327  d for tunnel relay method)   No
+  328  --tunnel-remote  IP address for remote tunnel interface (Required for tunnel relay method)  No
+  329  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.2 --tunnel-remote 192.168.168.1.3
+  330  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.2 --tunnel-remote 192.168.1.3
+  331  ifconfig 
+  332  ./sdnpwn.py lfa-relay --iface1 h3-eth1 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.3 --tunnel-remote 192.168.1.2
+  333  cat /sys/class/net/br0/bridge/group_fwd_mask 
+  334  cat /sys/class/net/gretap0/bridge/group_fwd_mask 
+  335  ifconfig 
+  336  cat /sys/class/net/br0GRETap/bridge/group_fwd_mask 
+  337  brctl show
+  338  ifconfig 
+  339  ping 192.168.1.3
+  340  ./sdnpwn.py 
+  341  ./sdnpwn.py info lfa-relau
+  342  ./sdnpwn.py info lfa-relay
+  343  d for tunnel relay method)   No
+  344  --tunnel-remote  IP address for remote tunnel interface (Required for tunnel relay method)  No
+  345  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.2 --tunnel-remote 192.168.168.1.3
+  346  ./sdnpwn.py lfa-relay --iface1 h2-eth1 --iface2 h2-eth1 --relay tunnel --tunnel-local 192.168.1.2 --tunnel-remote 192.168.1.3
+  347  ./sdnpwn.py lfa-relay --iface1 h2-eth0 --iface2 h2-eth1 --relay tunnel --tunnel-local 192.168.1.2 --tunnel-remote 192.168.1.3
+  348  ifconfig 
+  349  wireshark &
+  350  ./sdnpwn.py lfa-relay --iface1 h3-eth1 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.3 --tunnel-remote 192.168.168.1.2
+  351  ./sdnpwn.py lfa-relay --iface1 h3-eth1 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.3 --tunnel-remote 192.168.1.2
+  352  ./sdnpwn.py lfa-relay --iface1 h3-eth0 --iface2 h3-eth1 --relay tunnel --tunnel-local 192.168.1.3 --tunnel-remote 192.168.1.2
+  353  history > history.txt
